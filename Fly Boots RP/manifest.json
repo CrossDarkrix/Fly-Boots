@@ -1,17 +1,17 @@
 {
   "format_version": 2,
   "header": {
-    "name": "Fly boots V1.0.9 RP",
+    "name": "Fly boots V1.1.0 RP",
     "description": "By CrossDarkRix",
-    "uuid": "e414e7db-2dbe-4f31-9084-f64d29b76042",
-    "version": [1, 0, 9],
+    "uuid": "39d199c5-1840-4ac6-ba35-879bce2f1f1a",
+    "version": [1, 1, 0],
     "min_engine_version": [1, 20, 80]
   },
   "modules": [
     {
       "type": "resources",
-      "uuid": "13ba1038-c5ab-48c9-8427-963bdf8d33a3",
-      "version": [1, 0, 9]
+      "uuid": "58e8a96a-ee56-45b5-92cb-df6b63feb350",
+      "version": [1, 1, 0]
     }
   ]
 }

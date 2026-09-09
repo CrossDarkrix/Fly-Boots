@@ -13,8 +13,8 @@ const DESCEND_FORCE = 0.40;
 
 const MAX_Y_VEL = 4.0;
 
-const HORIZ_FORCE = 0.30;
-const HORIZ_FORCE_SPRINT = 0.35;
+const HORIZ_FORCE = 0.12;
+const HORIZ_FORCE_SPRINT = 0.18;
 
 const MAX_XZ_VEL = 5.0;
 const MAX_XZ_VEL_SPRINT = 5.0;
@@ -56,7 +56,7 @@ system.runInterval(() => {
 	if (!player.isOnGround) {player.setDynamicProperty("rocketAirborne", true);}
     if (flyingPlayers.has(id)) {
       try {
-        for(let i = 0; i < 2; i++) {
+        for(let i = 0; i < 1; i++) {
           player.dimension.spawnParticle("minecraft:blue_flame_particle", { 
             x: player.location.x + (Math.random() - 0.5) * 0.3, 
             y: player.location.y - 0.2, 
