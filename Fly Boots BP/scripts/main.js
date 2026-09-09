@@ -43,11 +43,12 @@ system.runInterval(() => {
                    }
         continue;
     }
-	try {
-        player.addEffect("resistance", 10, {
-            amplifier: 255,
-            showParticles: false});
-    } catch (e) {}
+	if (tick % 20 === 0) {
+        player.addEffect("slow_falling", 40, {
+            amplifier: 3,
+            showParticles: false
+        });
+    }
 
     const jump = player.inputInfo.getButtonState(InputButton.Jump) === ButtonState.Pressed;
     const sneak = player.inputInfo.getButtonState(InputButton.Sneak) === ButtonState.Pressed || player.isSneaking;
@@ -95,8 +96,8 @@ system.runInterval(() => {
         impulseY = -0.12;
         }
     else {
-        if (Math.abs(vel.y) > 0.02) {
-            impulseY = -vel.y * 0.25;
+        if (vel.y < -0.15) {
+            impulseY = 0.03;
         }
     }
 
