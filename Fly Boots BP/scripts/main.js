@@ -6,6 +6,8 @@ import {
   EquipmentSlot
 } from "@minecraft/server";
 
+let tick = 0;
+
 const flyingPlayers = new Set();
 
 const ASCEND_FORCE = 0.45;
@@ -27,6 +29,7 @@ function stopFly(player) {
 
 
 system.runInterval(() => {
+  tick++;
   for (const player of world.getPlayers()) {
     const id = player.id;
 
@@ -52,9 +55,9 @@ system.runInterval(() => {
     const movement = player.inputInfo.getMovementVector();
     const moving = Math.abs(movement.x) > 0.01 || Math.abs(movement.y) > 0.01;
 
-    if (!flyingPlayers.has(id)) {flyingPlayers.add(id);}
+    if (!player.isOnGround && !flyingPlayers.has(id)) {flyingPlayers.add(id);}
 	if (!player.isOnGround) {player.setDynamicProperty("rocketAirborne", true);}
-    if (flyingPlayers.has(id)) {
+    if (flyingPlayers.has(id) && tick % 5 === 0) {
       try {
         for(let i = 0; i < 1; i++) {
           player.dimension.spawnParticle("minecraft:blue_flame_particle", { 
