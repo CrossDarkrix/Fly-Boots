@@ -1,0 +1,24 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:item": {
+    "description": {
+      "identifier": "custom:rocket_boots",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:icon": "rocket_boots",
+      "minecraft:display_name": {
+        "value": "Rocket Boots"
+      },
+      "minecraft:glint": true,
+      "minecraft:wearable": {
+        "slot": "slot.armor.feet"
+      },
+      "minecraft:durability": {
+        "max_durability": 8092
+      }
+    }
+  }
+}

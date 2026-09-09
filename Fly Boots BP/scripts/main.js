@@ -1,0 +1,124 @@
+import {
+  world,
+  system,
+  InputButton, 
+  ButtonState,
+  EquipmentSlot
+} from "@minecraft/server";
+
+const flyingPlayers = new Set();
+
+const ASCEND_FORCE = 0.45;
+const DESCEND_FORCE = 0.40;
+
+const MAX_Y_VEL = 4.0;
+
+const HORIZ_FORCE = 0.30;
+const HORIZ_FORCE_SPRINT = 0.35;
+
+const MAX_XZ_VEL = 5.0;
+const MAX_XZ_VEL_SPRINT = 5.0;
+
+const DRAG = 0.35;
+
+function stopFly(player) {
+    flyingPlayers.delete(player.id);
+}
+
+
+system.runInterval(() => {
+  for (const player of world.getPlayers()) {
+    const id = player.id;
+
+    const equipment = player.getComponent("equippable");
+    const feetItem = equipment?.getEquipment(EquipmentSlot.Feet);
+    const hasFly = feetItem?.typeId === "custom:rocket_boots";
+
+    if (!hasFly) {
+       if (flyingPlayers.has(id)) {
+            stopFly(player);
+                   }
+        continue;
+    }
+	try {
+        player.addEffect("resistance", 10, {
+            amplifier: 255,
+            showParticles: false});
+    } catch (e) {}
+
+    const jump = player.inputInfo.getButtonState(InputButton.Jump) === ButtonState.Pressed;
+    const sneak = player.inputInfo.getButtonState(InputButton.Sneak) === ButtonState.Pressed || player.isSneaking;
+    const sprint = player.isSprinting;
+    const movement = player.inputInfo.getMovementVector();
+    const moving = Math.abs(movement.x) > 0.01 || Math.abs(movement.y) > 0.01;
+
+    if (!flyingPlayers.has(id)) {flyingPlayers.add(id);}
+	if (!player.isOnGround) {player.setDynamicProperty("rocketAirborne", true);}
+    if (flyingPlayers.has(id)) {
+      try {
+        for(let i = 0; i < 2; i++) {
+          player.dimension.spawnParticle("minecraft:blue_flame_particle", { 
+            x: player.location.x + (Math.random() - 0.5) * 0.3, 
+            y: player.location.y - 0.2, 
+            z: player.location.z + (Math.random() - 0.5) * 0.3 
+          });
+          player.dimension.spawnParticle("minecraft:large_smoke_particle", { 
+            x: player.location.x + (Math.random() - 0.5) * 0.3, 
+            y: player.location.y - 0.2, 
+            z: player.location.z + (Math.random() - 0.5) * 0.3 
+          });
+        }
+      } catch (e) {}
+    }
+    if (
+            player.isOnGround &&
+            player.getDynamicProperty("rocketAirborne")
+        ) {
+            player.setDynamicProperty("rocketAirborne", false);
+
+            try {
+                player.addEffect("resistance", 40, {
+                    amplifier: 255,
+                    showParticles: false
+                });
+            } catch (e) {}
+        }
+    const vel = player.getVelocity();
+    let impulseX = 0, impulseY = 0, impulseZ = 0;
+    if (jump) {
+       impulseY = 0.15;
+        }
+    else if (sneak) {
+        impulseY = -0.15;
+        }
+    else {
+        if (Math.abs(vel.y) > 0.05) {
+            impulseY = -vel.y * 0.25;
+        }
+    }
+
+    if (moving) {
+        const look = player.getViewDirection();
+        const dirX = look.x * movement.y + look.z * movement.x;
+        const dirZ = look.z * movement.y - look.x * movement.x;
+        const len = Math.hypot(dirX, dirZ);
+
+        if (len > 0) {
+            const normX = dirX / len;
+            const normZ = dirZ / len;
+            const maxV = sprint ? MAX_XZ_VEL_SPRINT : MAX_XZ_VEL;
+            const f = sprint ? HORIZ_FORCE_SPRINT : HORIZ_FORCE;
+
+            if (Math.abs(vel.x) < maxV) impulseX = normX * f;
+            if (Math.abs(vel.z) < maxV) impulseZ = normZ * f;
+        }
+    } else {
+        if (Math.abs(vel.x) > 0.02) impulseX = -vel.x * DRAG;
+        if (Math.abs(vel.z) > 0.02) impulseZ = -vel.z * DRAG;
+    }
+
+    if (Math.abs(impulseX) > 0.001 || Math.abs(impulseY) > 0.001 || Math.abs(impulseZ) > 0.001) {
+        player.applyImpulse({ x: impulseX, y: impulseY, z: impulseZ });
+    }
+  }
+}, 1);

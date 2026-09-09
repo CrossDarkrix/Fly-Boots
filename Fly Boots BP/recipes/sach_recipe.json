@@ -1,0 +1,22 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "custom:rocket_boots_recipe"
+    },
+    "tags": [ "crafting_table" ],
+    "pattern": [
+      "LCL",
+      "CEC",
+      "LCL"
+    ],
+    "key": {
+      "L": { "item": "minecraft:lapis_lazuli" },
+      "C": { "item": "minecraft:diamond" },
+      "E": { "item": "minecraft:feather" }
+    },
+    "result": {
+      "item": "custom:rocket_boots"
+    }
+  }
+}

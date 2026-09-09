@@ -1,0 +1,9 @@
+{
+  "resource_pack_name": "rocket",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "rocket_boots": {
+      "textures": "textures/items/rocket_boots"
+    }
+  }
+}
