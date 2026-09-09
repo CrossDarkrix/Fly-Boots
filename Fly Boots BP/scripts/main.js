@@ -95,8 +95,8 @@ system.runInterval(() => {
         impulseY = -0.12;
         }
     else {
-        if (Math.abs(vel.y) > 0.10) {
-            impulseY = -vel.y * 0.15;
+        if (Math.abs(vel.y) > 0.02) {
+            impulseY = -vel.y * 0.25;
         }
     }
 
