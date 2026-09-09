@@ -10,15 +10,12 @@ let tick = 0;
 
 const flyingPlayers = new Set();
 
-const ASCEND_FORCE = 0.45;
-const DESCEND_FORCE = 0.40;
-
 const MAX_Y_VEL = 4.0;
 
 const HORIZ_FORCE = 0.12;
 const HORIZ_FORCE_SPRINT = 0.18;
 
-const MAX_XZ_VEL = 5.0;
+const MAX_XZ_VEL = 3.5;
 const MAX_XZ_VEL_SPRINT = 5.0;
 
 const DRAG = 0.35;
@@ -43,9 +40,9 @@ system.runInterval(() => {
                    }
         continue;
     }
-	if (tick % 20 === 0) {
+	if (tick % 15 === 0) {
         player.addEffect("slow_falling", 40, {
-            amplifier: 3,
+            amplifier: 4,
             showParticles: false
         });
     }
@@ -101,7 +98,7 @@ system.runInterval(() => {
         }
     }
 
-    if (moving) {
+    if (!player.isOnGround && moving) {
         const look = player.getViewDirection();
         const dirX = look.x * movement.y + look.z * movement.x;
         const dirZ = look.z * movement.y - look.x * movement.x;
@@ -112,11 +109,23 @@ system.runInterval(() => {
             const normZ = dirZ / len;
             const maxV = sprint ? MAX_XZ_VEL_SPRINT : MAX_XZ_VEL;
             const f = sprint ? HORIZ_FORCE_SPRINT : HORIZ_FORCE;
+            const horizontalSpeed = Math.hypot(vel.x, vel.z);
 
-            if (Math.abs(vel.x) < maxV) impulseX = normX * f;
-            if (Math.abs(vel.z) < maxV) impulseZ = normZ * f;
+            if (horizontalSpeed < maxV) {
+                let nextX = vel.x + normX * f;
+                let nextZ = vel.z + normZ * f;
+                const nextSpeed = Math.hypot(nextX, nextZ);
+
+                if (nextSpeed > maxV) {
+                    const scale = maxV / nextSpeed;
+                    nextX *= scale;
+                    nextZ *= scale;
+                }
+                impulseX = nextX - vel.x;
+                impulseZ = nextZ - vel.z;
+            }
         }
-    } else {
+    } else if (!player.isOnGround) {
         if (Math.abs(vel.x) > 0.02) impulseX = -vel.x * DRAG;
         if (Math.abs(vel.z) > 0.02) impulseZ = -vel.z * DRAG;
     }
