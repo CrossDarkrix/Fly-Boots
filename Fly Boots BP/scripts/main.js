@@ -92,11 +92,11 @@ system.runInterval(() => {
        impulseY = 0.15;
         }
     else if (sneak) {
-        impulseY = -0.15;
+        impulseY = -0.12;
         }
     else {
-        if (Math.abs(vel.y) > 0.05) {
-            impulseY = -vel.y * 0.25;
+        if (Math.abs(vel.y) > 0.10) {
+            impulseY = -vel.y * 0.15;
         }
     }
 
