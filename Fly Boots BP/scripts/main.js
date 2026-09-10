@@ -38,9 +38,9 @@ system.runInterval(() => {
                    }
         continue;
     }
-	if (tick % 15 === 0) {
-        player.addEffect("slow_falling", 40, {
-            amplifier: 255,
+	if (tick % 17 === 0 && !player.isOnGround) {
+        player.addEffect("slow_falling", 100, {
+            amplifier: 1,
             showParticles: false
         });
     }
@@ -53,8 +53,8 @@ system.runInterval(() => {
 
     if (!player.isOnGround && !flyingPlayers.has(id)) {flyingPlayers.add(id);}
 	if (!player.isOnGround) {player.setDynamicProperty("rocketAirborne", true);}
-	if (tick % 9 === 0 && !player.isOnGround && flyingPlayers.has(id) && !sneak) {
-        player.addEffect("levitation", 7, {
+	if (tick % 4 === 0 && !player.isOnGround && flyingPlayers.has(id) && !sneak) {
+        player.addEffect("levitation", 1, {
             amplifier: 0,
             showParticles: false
         });
