@@ -10,8 +10,6 @@ let tick = 0;
 
 const flyingPlayers = new Set();
 
-const MAX_Y_VEL = 4.0;
-
 const HORIZ_FORCE = 0.12;
 const HORIZ_FORCE_SPRINT = 0.18;
 
@@ -42,7 +40,7 @@ system.runInterval(() => {
     }
 	if (tick % 15 === 0) {
         player.addEffect("slow_falling", 40, {
-            amplifier: 4,
+            amplifier: 255,
             showParticles: false
         });
     }
@@ -55,6 +53,12 @@ system.runInterval(() => {
 
     if (!player.isOnGround && !flyingPlayers.has(id)) {flyingPlayers.add(id);}
 	if (!player.isOnGround) {player.setDynamicProperty("rocketAirborne", true);}
+	if (tick % 9 === 0 && !player.isOnGround && flyingPlayers.has(id) && !sneak) {
+        player.addEffect("levitation", 7, {
+            amplifier: 0,
+            showParticles: false
+        });
+    }
     if (flyingPlayers.has(id) && tick % 5 === 0) {
       try {
         for(let i = 0; i < 1; i++) {
@@ -93,8 +97,8 @@ system.runInterval(() => {
         impulseY = -0.12;
         }
     else {
-        if (vel.y < -0.15) {
-            impulseY = 0.03;
+        if (vel.y < 0) {
+            impulseY = 0.01;
         }
     }
 
