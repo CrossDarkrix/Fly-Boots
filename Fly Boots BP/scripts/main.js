@@ -16,7 +16,7 @@ const MAX_XZ_VEL_SPRINT = 5.0;
 
 const DRAG = 0.35;
 
-const DOUBLE_TAP_WINDOW = 7;
+const DOUBLE_TAP_WINDOW = 4;
 
 system.runInterval(() => {
   tick++;
@@ -43,7 +43,7 @@ system.runInterval(() => {
     const movement = player.inputInfo.getMovementVector();
     const moving = Math.abs(movement.x) > 0.01 || Math.abs(movement.y) > 0.01;
     if (jump && !lastJumpPressed) {
-        if (tick - lastJumpTick <= DOUBLE_TAP_WINDOW) {
+        if (tick - lastJumpTick <= DOUBLE_TAP_WINDOW && !player.isOnGround) {
 
             const flyEnabled =
                 player.getDynamicProperty("rocketFly") === true;
@@ -133,7 +133,7 @@ system.runInterval(() => {
     let impulseX = 0, impulseY = 0, impulseZ = 0;
 	if (isFlying) {
         if (jump) {
-           impulseY = 0.15;
+           impulseY = 0;
             }
         else if (sneak) {
             impulseY = -0.12;
