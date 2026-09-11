@@ -8,8 +8,6 @@ import {
 
 let tick = 0;
 
-const flyingPlayers = new Set();
-
 const HORIZ_FORCE = 0.12;
 const HORIZ_FORCE_SPRINT = 0.18;
 
@@ -18,10 +16,7 @@ const MAX_XZ_VEL_SPRINT = 5.0;
 
 const DRAG = 0.35;
 
-function stopFly(player) {
-    flyingPlayers.delete(player.id);
-}
-
+const DOUBLE_TAP_WINDOW = 7;
 
 system.runInterval(() => {
   tick++;
@@ -33,33 +28,76 @@ system.runInterval(() => {
     const hasFly = feetItem?.typeId === "custom:rocket_boots";
 
     if (!hasFly) {
-       if (flyingPlayers.has(id)) {
-            stopFly(player);
-                   }
+        player.setDynamicProperty(
+            "rocketFly",
+            false
+        );
         continue;
-    }
-	if (tick % 17 === 0 && !player.isOnGround) {
-        player.addEffect("slow_falling", 100, {
-            amplifier: 1,
-            showParticles: false
-        });
     }
 
     const jump = player.inputInfo.getButtonState(InputButton.Jump) === ButtonState.Pressed;
+	const lastJumpPressed = player.getDynamicProperty("lastJumpPressed") ?? false;
+    const lastJumpTick = player.getDynamicProperty("lastJumpTick") ?? -999;
     const sneak = player.inputInfo.getButtonState(InputButton.Sneak) === ButtonState.Pressed || player.isSneaking;
     const sprint = player.isSprinting;
     const movement = player.inputInfo.getMovementVector();
     const moving = Math.abs(movement.x) > 0.01 || Math.abs(movement.y) > 0.01;
+    if (jump && !lastJumpPressed) {
+        if (tick - lastJumpTick <= DOUBLE_TAP_WINDOW) {
 
-    if (!player.isOnGround && !flyingPlayers.has(id)) {flyingPlayers.add(id);}
-	if (!player.isOnGround) {player.setDynamicProperty("rocketAirborne", true);}
-	if (tick % 4 === 0 && !player.isOnGround && flyingPlayers.has(id) && !sneak) {
-        player.addEffect("levitation", 1, {
+            const flyEnabled =
+                player.getDynamicProperty("rocketFly") === true;
+
+            if (flyEnabled) {
+
+                player.setDynamicProperty(
+                    "rocketFly",
+                    false
+                );
+                player.clearVelocity();
+                try {
+                    player.addEffect("resistance", 80, {
+                        amplifier: 255,
+                        showParticles: false
+                    });
+                } catch (e) {}
+
+            } else {
+
+                player.setDynamicProperty(
+                    "rocketFly",
+                    true
+                );
+
+            }
+
+            player.setDynamicProperty(
+                "lastJumpTick",
+                -999
+            );
+
+        } else {
+
+            player.setDynamicProperty(
+                "lastJumpTick",
+                tick
+            );
+
+        }
+    }
+
+    player.setDynamicProperty(
+        "lastJumpPressed",
+        jump
+    );
+	const isFlying = hasFly && player.getDynamicProperty("rocketFly") === true;
+    if (tick % 4 === 0 && isFlying && !jump && !sneak) {
+        player.addEffect("levitation", 5, {
             amplifier: 0,
             showParticles: false
         });
     }
-    if (flyingPlayers.has(id) && tick % 5 === 0) {
+    if (isFlying && tick % 5 === 0) {
       try {
         for(let i = 0; i < 1; i++) {
           player.dimension.spawnParticle("minecraft:blue_flame_particle", { 
@@ -75,34 +113,47 @@ system.runInterval(() => {
         }
       } catch (e) {}
     }
+    if (!player.isOnGround) {
+    player.setDynamicProperty("rocketAirborne", true);
+    }
     if (
-            player.isOnGround &&
-            player.getDynamicProperty("rocketAirborne")
-        ) {
-            player.setDynamicProperty("rocketAirborne", false);
+        player.isOnGround &&
+        player.getDynamicProperty("rocketAirborne")
+    ) {
+        player.setDynamicProperty("rocketAirborne", false);
 
-            try {
-                player.addEffect("resistance", 40, {
-                    amplifier: 255,
-                    showParticles: false
-                });
-            } catch (e) {}
-        }
+        try {
+            player.addEffect("resistance", 40, {
+                amplifier: 255,
+                showParticles: false
+            });
+        } catch (e) {}
+    }
     const vel = player.getVelocity();
     let impulseX = 0, impulseY = 0, impulseZ = 0;
-    if (jump) {
-       impulseY = 0.15;
-        }
-    else if (sneak) {
-        impulseY = -0.12;
-        }
-    else {
-        if (vel.y < 0) {
-            impulseY = 0.01;
+	if (isFlying) {
+        if (jump) {
+           impulseY = 0.15;
+            }
+        else if (sneak) {
+            impulseY = -0.12;
+            }
+        else {
+            impulseY = 0;
         }
     }
-
-    if (!player.isOnGround && moving) {
+        if (
+        !isFlying &&
+        !moving &&
+        !jump &&
+        !sneak &&
+        Math.abs(vel.x) < 0.15 &&
+        Math.abs(vel.y) < 0.15 &&
+        Math.abs(vel.z) < 0.15
+    ) {
+        player.clearVelocity();
+    }
+    if (isFlying && moving) {
         const look = player.getViewDirection();
         const dirX = look.x * movement.y + look.z * movement.x;
         const dirZ = look.z * movement.y - look.x * movement.x;
@@ -139,3 +190,20 @@ system.runInterval(() => {
     }
   }
 }, 1);
+world.beforeEvents.entityHurt.subscribe((event) => {
+    const player = event.hurtEntity;
+
+    if (player.typeId !== "minecraft:player")
+        return;
+
+    const equipment = player.getComponent("equippable");
+    const feetItem = equipment?.getEquipment(EquipmentSlot.Feet);
+
+    if (feetItem?.typeId !== "custom:rocket_boots")
+        return;
+
+    if (event.damageSource.cause !== "fall")
+        return;
+
+    event.cancel = true;
+});

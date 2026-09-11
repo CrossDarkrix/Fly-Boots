@@ -1,18 +1,18 @@
 {
   "format_version": 2,
   "header": {
-    "name": "Fly boots V1.4.9 BP",
+    "name": "Fly boots V1.6.2 BP",
     "description": "By CrossDarkRix",
-    "uuid": "c8ae5602-6099-4be4-9c2c-720c7412be64",
-    "version": [1, 4, 9],
+    "uuid": "e15f8e83-08b2-421c-95ff-33ffc2e27422",
+    "version": [1, 6, 2],
     "min_engine_version": [1, 20, 80]
   },
   "modules": [
     {
       "type": "script",
       "language": "javascript",
-      "uuid": "8a66633e-74e1-477d-a600-2df46ec3792a",
-      "version": [1, 4, 9],
+      "uuid": "08f19e23-d04b-424e-8610-686490be916e",
+      "version": [1, 6, 2],
       "entry": "scripts/main.js"
     }
   ],
@@ -22,11 +22,11 @@
       "version": "1.10.0"
     },
 	{
-      "uuid": "0cdb404a-eb53-4210-ac1f-5fa1fad7e0a1",
+      "uuid": "0b198226-ec4b-43a0-b58a-51e683583faa",
       "version": [
         1,
-        4,
-        9
+        6,
+        2
       ]
     }
   ],
