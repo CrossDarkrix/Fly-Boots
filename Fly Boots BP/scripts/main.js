@@ -16,8 +16,6 @@ const MAX_XZ_VEL_SPRINT = 5.0;
 
 const DRAG = 0.35;
 
-const DOUBLE_TAP_WINDOW = 4;
-
 system.runInterval(() => {
   tick++;
   for (const player of world.getPlayers()) {
@@ -28,74 +26,26 @@ system.runInterval(() => {
     const hasFly = feetItem?.typeId === "custom:rocket_boots";
 
     if (!hasFly) {
-        player.setDynamicProperty(
-            "rocketFly",
-            false
-        );
         continue;
     }
 
     const jump = player.inputInfo.getButtonState(InputButton.Jump) === ButtonState.Pressed;
-	const lastJumpPressed = player.getDynamicProperty("lastJumpPressed") ?? false;
-    const lastJumpTick = player.getDynamicProperty("lastJumpTick") ?? -999;
     const sneak = player.inputInfo.getButtonState(InputButton.Sneak) === ButtonState.Pressed || player.isSneaking;
     const sprint = player.isSprinting;
     const movement = player.inputInfo.getMovementVector();
     const moving = Math.abs(movement.x) > 0.01 || Math.abs(movement.y) > 0.01;
-    if (jump && !lastJumpPressed) {
-        if (tick - lastJumpTick <= DOUBLE_TAP_WINDOW && !player.isOnGround) {
 
-            const flyEnabled =
-                player.getDynamicProperty("rocketFly") === true;
-
-            if (flyEnabled) {
-
-                player.setDynamicProperty(
-                    "rocketFly",
-                    false
-                );
-                player.clearVelocity();
-                try {
-                    player.addEffect("resistance", 80, {
-                        amplifier: 255,
-                        showParticles: false
-                    });
-                } catch (e) {}
-
-            } else {
-
-                player.setDynamicProperty(
-                    "rocketFly",
-                    true
-                );
-
-            }
-
-            player.setDynamicProperty(
-                "lastJumpTick",
-                -999
-            );
-
-        } else {
-
-            player.setDynamicProperty(
-                "lastJumpTick",
-                tick
-            );
-
-        }
-    }
-
-    player.setDynamicProperty(
-        "lastJumpPressed",
-        jump
-    );
-	const isFlying = hasFly && player.getDynamicProperty("rocketFly") === true;
+	const isFlying = hasFly && !player.isOnGround;
     if (tick % 4 === 0 && isFlying && !jump && !sneak) {
         player.addEffect("levitation", 5, {
             amplifier: 0,
             showParticles: false
         });
+    }
+	if (tick % 20 === 0 && hasFly) {
+    player.addEffect("slow_falling", 40, {
+        amplifier: 0,
+        showParticles: false});
     }
     if (isFlying && tick % 5 === 0) {
       try {
@@ -114,8 +64,8 @@ system.runInterval(() => {
       } catch (e) {}
     }
     if (!player.isOnGround) {
-    player.setDynamicProperty("rocketAirborne", true);
-    }
+    player.setDynamicProperty("rocketAirborne", true);}
+
     if (
         player.isOnGround &&
         player.getDynamicProperty("rocketAirborne")
@@ -131,19 +81,16 @@ system.runInterval(() => {
     }
     const vel = player.getVelocity();
     let impulseX = 0, impulseY = 0, impulseZ = 0;
-	if (isFlying) {
-        if (jump) {
-           impulseY = 0;
-            }
-        else if (sneak) {
-            impulseY = -0.12;
-            }
-        else {
-            impulseY = 0;
+    if (jump) {
+       impulseY = 0.15;
         }
+    else if (sneak) {
+        impulseY = -0.12;
+        }
+    else {
+        impulseY = 0;
     }
         if (
-        !isFlying &&
         !moving &&
         !jump &&
         !sneak &&
@@ -153,7 +100,7 @@ system.runInterval(() => {
     ) {
         player.clearVelocity();
     }
-    if (isFlying && moving) {
+    if (!player.isOnGround && moving) {
         const look = player.getViewDirection();
         const dirX = look.x * movement.y + look.z * movement.x;
         const dirZ = look.z * movement.y - look.x * movement.x;
@@ -200,9 +147,6 @@ world.beforeEvents.entityHurt.subscribe((event) => {
     const feetItem = equipment?.getEquipment(EquipmentSlot.Feet);
 
     if (feetItem?.typeId !== "custom:rocket_boots")
-        return;
-
-    if (event.damageSource.cause !== "fall")
         return;
 
     event.cancel = true;
