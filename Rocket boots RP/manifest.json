@@ -1,0 +1,26 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Rocket boots v1.8.3 RP",
+    "description": "By CrossDarkRix",
+    "uuid": "6fac9f2f-ce9b-4809-a9f7-5e4c192de0a1",
+    "version": [1, 8, 3],
+    "min_engine_version": [1, 20, 80]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "70ffb794-a030-4836-8849-9605cc93fdbe",
+      "version": [1, 8, 3]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "8a14abc8-1d5a-4236-ac59-bc1e91402537",
+      "version": [
+        1,
+        8,
+        3
+      ]
+    }]
+}

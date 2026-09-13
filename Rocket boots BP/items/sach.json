@@ -9,6 +9,7 @@
     },
     "components": {
       "minecraft:icon": "rocket_boots",
+
       "minecraft:display_name": {
         "value": "Rocket Boots"
       },
@@ -16,8 +17,14 @@
       "minecraft:wearable": {
         "slot": "slot.armor.feet"
       },
+
       "minecraft:durability": {
-        "max_durability": 8092
+        "max_durability": 9092
+      },
+
+      "minecraft:enchantable": {
+        "slot": "armor_feet",
+        "value": 10
       }
     }
   }

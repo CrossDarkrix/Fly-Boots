@@ -1,32 +1,32 @@
 {
   "format_version": 2,
   "header": {
-    "name": "Fly boots V1.7.1 BP",
+    "name": "Rocket boots v1.8.3 BP",
     "description": "By CrossDarkRix",
-    "uuid": "6baffad9-4161-4ca1-9a7c-8d93a40fd448",
-    "version": [1, 7, 1],
+    "uuid": "8a14abc8-1d5a-4236-ac59-bc1e91402537",
+    "version": [1, 8, 3],
     "min_engine_version": [1, 20, 80]
   },
   "modules": [
     {
       "type": "script",
       "language": "javascript",
-      "uuid": "95961f9d-6109-41ad-90e7-2f63f47bf4ab",
-      "version": [1, 7, 1],
+      "uuid": "69ffee6a-fa15-4d65-b0f1-d94457bd8232",
+      "version": [1, 8, 3],
       "entry": "scripts/main.js"
     }
   ],
   "dependencies": [
     {
       "module_name": "@minecraft/server",
-      "version": "1.10.0"
+      "version": "2.6.0"
     },
 	{
-      "uuid": "6368e804-9812-42d4-9f61-f21a434ad2e2",
+      "uuid": "6fac9f2f-ce9b-4809-a9f7-5e4c192de0a1",
       "version": [
         1,
-        7,
-        1
+        8,
+        3
       ]
     }
   ],
