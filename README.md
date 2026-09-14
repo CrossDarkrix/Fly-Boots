@@ -22,7 +22,7 @@
 
 # 
 
-# !\[rocket-boots.gif](https://raw.githubusercontent.com/CrossDarkrix/Fly-Boots/main/images/rocket-boots.gif)
+# <img src="https://raw.githubusercontent.com/CrossDarkrix/Fly-Boots/main/images/rocket-boots.gif" width="80%" height="80%" alt="rocket-boots.gif">
 
 # 
 
