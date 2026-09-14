@@ -10,7 +10,7 @@ Unlike many flight add-ons, Rocket Boots uses a script-driven system and does no
 
 ***
 
-<img src="https://raw.githubusercontent.com/CrossDarkrix/Fly-Boots/main/images/rocket-boots.gif" width="80%" height="80%" alt="rocket-boots.gif">
+<img src="https://raw.githubusercontent.com/CrossDarkrix/Fly-Boots/main/images/rocket-boots.gif" width="95%" height="95%" alt="rocket-boots.gif">
 
 ***
 
