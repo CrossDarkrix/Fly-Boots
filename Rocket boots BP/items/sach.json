@@ -1,5 +1,5 @@
 {
-  "format_version": "1.21.0",
+  "format_version": "1.20.80",
   "minecraft:item": {
     "description": {
       "identifier": "custom:rocket_boots",
@@ -8,13 +8,20 @@
       }
     },
     "components": {
-      "minecraft:icon": "rocket_boots",
+      "minecraft:icon": {
+        "textures": {
+            "default": "rocket_boots"
+            }
+      },
 
       "minecraft:display_name": {
         "value": "Rocket Boots"
       },
+
       "minecraft:glint": true,
+
       "minecraft:wearable": {
+        "protection": 55,
         "slot": "slot.armor.feet"
       },
 
@@ -25,7 +32,23 @@
       "minecraft:enchantable": {
         "slot": "armor_feet",
         "value": 10
-      }
+      },
+
+      "minecraft:repairable": {
+        "repair_items": [
+          {
+            "items": [
+              "minecraft:netherite_ingot"
+            ],
+            "repair_amount": "query.max_durability * 0.25"
+          }
+        ]
+      },
+	  "minecraft:tags": {
+        "tags": [
+            "minecraft:trimmable_armors"
+            ]
+        }
     }
   }
 }
