@@ -1,18 +1,18 @@
 {
   "format_version": 2,
   "header": {
-    "name": "Rocket boots v1.8.6 BP",
+    "name": "Rocket boots v1.8.7 BP",
     "description": "By CrossDarkRix",
-    "uuid": "a8e18da9-ea83-406e-9f1f-1d88b1737a73",
-    "version": [1, 8, 6],
+    "uuid": "6b79ca85-5945-4865-96ef-b0db6636b6b1",
+    "version": [1, 8, 7],
     "min_engine_version": [1, 20, 80]
   },
   "modules": [
     {
       "type": "script",
       "language": "javascript",
-      "uuid": "2cad0a5b-3135-441f-87a3-bf2cf766424d",
-      "version": [1, 8, 6],
+      "uuid": "34976749-aa14-4114-adf7-f1dff2b4d007",
+      "version": [1, 8, 7],
       "entry": "scripts/main.js"
     }
   ],
@@ -22,11 +22,11 @@
       "version": "2.6.0"
     },
 	{
-      "uuid": "757525f6-08d4-4dbd-95a6-4fe38310b3e8",
+      "uuid": "f1d2f1ce-9da7-4c9c-9883-c515a428e455",
       "version": [
         1,
         8,
-        6
+        7
       ]
     }
   ],

@@ -1,0 +1,24 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "custom:rocket_boots",
+
+      "materials": {
+        "default": "armor"
+      },
+
+      "textures": {
+        "default": "textures/models/armor/rocket_armor"
+      },
+
+      "geometry": {
+        "default": "geometry.humanoid.armor.boots"
+      },
+
+      "render_controllers": [
+        "controller.render.armor"
+      ]
+    }
+  }
+}
